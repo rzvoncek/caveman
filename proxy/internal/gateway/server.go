@@ -315,7 +315,12 @@ type Server struct {
 	// chatGPTUpstream is the Codex subscription target (test-injectable;
 	// DefaultChatGPTUpstream in production). Eligible /responses calls may take
 	// live-zone compression before forwarding.
-	chatGPTUpstream      string
+	chatGPTUpstream string
+	// bobUpstream is the IBM Bob gateway target (test-injectable;
+	// DefaultBobUpstream in production). Inference calls take live-zone
+	// compression; all other paths (admin, metrics, etc.) are byte-identical
+	// pass-through so Bob's startup /admin/v1/profile check succeeds.
+	bobUpstream          string
 	subscriptionCompress string
 	// toolSchemaStrip selects the tool-schema annotation strip. Only "annotations"
 	// enables it; every other value (including the empty default) is off.
@@ -423,6 +428,9 @@ type Config struct {
 	// ChatGPTUpstream overrides the /chatgpt passthrough target (tests only);
 	// empty means DefaultChatGPTUpstream.
 	ChatGPTUpstream string
+	// BobUpstream overrides the /bob passthrough target (tests only);
+	// empty means DefaultBobUpstream.
+	BobUpstream string
 	// SubscriptionCompress is the operator off-switch for subscription live-zone
 	// compression: empty/"live_zone" allow it, "off" (and any unknown value) fail
 	// closed to S0 passthrough. It is the ONLY policy input — there is no account
@@ -458,6 +466,10 @@ func New(cfg Config) *Server {
 	if upstream == "" {
 		upstream = DefaultChatGPTUpstream
 	}
+	bobUpstream := cfg.BobUpstream
+	if bobUpstream == "" {
+		bobUpstream = DefaultBobUpstream
+	}
 	if cfg.ToolSchemaStrip == toolSchemaStripMode && cfg.Logger != nil {
 		// One startup line, because this lever rewrites the head of the provider
 		// cache prefix: the operator should be able to date the one-time cold write
@@ -484,6 +496,7 @@ func New(cfg Config) *Server {
 		recoveryViaMCP:       cfg.RecoveryViaMCP,
 		observeEstimate:      cfg.ObserveEstimate,
 		chatGPTUpstream:      strings.TrimSuffix(upstream, "/"),
+		bobUpstream:          strings.TrimSuffix(bobUpstream, "/"),
 		subscriptionCompress: cfg.SubscriptionCompress,
 		toolSchemaStrip:      cfg.ToolSchemaStrip,
 		breakpointPlan:       cfg.BreakpointPlan,
@@ -507,6 +520,7 @@ func (s *Server) Handler() http.Handler {
 	// ChatGPT-login Codex: OAuth-preserving forward with OpenAI Responses
 	// live-zone compression and exact-original fallback.
 	mux.HandleFunc("/chatgpt/", s.chatgpt)
+	mux.HandleFunc("/bob/", s.bob)
 	mux.HandleFunc("/", s.proxy)
 	return mux
 }

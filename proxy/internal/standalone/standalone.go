@@ -166,6 +166,7 @@ func New(cfg config.Config, sink gateway.TelemetrySink, opts Options) *gateway.S
 		SessionFallback:      opts.SessionFallback,
 		ToolSchemaStrip:      cfg.ToolSchemaStrip,
 		BreakpointPlan:       cfg.BreakpointPlan,
+		BobUpstream:          cfg.BobUpstream,
 		HTTPClient:           client,
 		Logger:               opts.Logger,
 	})

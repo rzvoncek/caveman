@@ -55,6 +55,10 @@ type Config struct {
 	// request only, so it changes no model-visible bytes — but it stays off until
 	// the escalation ladder has priced it.
 	BreakpointPlan string `yaml:"breakpoint_plan"`
+	// BobUpstream overrides the IBM Bob gateway URL the /bob proxy route forwards
+	// to. Defaults to gateway.DefaultBobUpstream ("https://api.us-east.bob.ibm.com").
+	// Set via CAVEMAN_BOB_UPSTREAM env or the caveman.yaml bob_upstream key.
+	BobUpstream string `yaml:"bob_upstream"`
 	// ObserveEstimate turns on record-mode observe-only estimation. When true AND
 	// Mode is "record", the proxy runs the compressor on COPIES of each live-zone
 	// segment to measure the tokens compression WOULD have cut, without ever
@@ -156,6 +160,9 @@ func (c Config) withDefaults() Config {
 	}
 	if plan := env.String("CAVEMAN_BREAKPOINT_PLAN", ""); plan != "" {
 		c.BreakpointPlan = plan
+	}
+	if u := env.String("CAVEMAN_BOB_UPSTREAM", ""); u != "" {
+		c.BobUpstream = u
 	}
 	if env.Bool("CAVEMAN_OBSERVE_ESTIMATE", false) {
 		c.ObserveEstimate = true

@@ -2,7 +2,7 @@ package providers
 
 // CompressionCoverageVersion changes whenever a registered request surface is
 // added, removed, or changes compression eligibility.
-const CompressionCoverageVersion = "2026-08-10.1"
+const CompressionCoverageVersion = "2026-08-10.2"
 
 type CompressionRouteCoverage struct {
 	Provider string `json:"provider"`
@@ -25,6 +25,7 @@ func CompressionRouteMatrix() []CompressionRouteCoverage {
 		{Provider: "openai", Route: "/openai/v1/chat/completions", Grammar: "openai-chat", Fields: "latest user content and tool output", Status: "supported"},
 		{Provider: "openai", Route: "/openai/v1/responses", Grammar: "openai-responses", Fields: "latest user input and tool output", Status: "supported"},
 		{Provider: "openai", Route: "/openai/v1/embeddings", Grammar: "openai-embeddings", Status: "unsupported", Reason: "embeddings are not model-visible prompt text"},
+		{Provider: "openai", Route: "/inference/v1/chat/completions", Grammar: "openai-chat", Fields: "IBM Bob inference endpoint; same openai-chat grammar", Status: "supported"},
 		{Provider: "anthropic", Route: "/v1/messages", Grammar: "anthropic-messages", Fields: "cache-cold user text and tool_result output", Status: "supported"},
 		{Provider: "anthropic", Route: "/v1/messages/count_tokens", Grammar: "anthropic-count", Status: "unsupported", Reason: "accounting endpoint must preserve request bytes"},
 		{Provider: "anthropic", Route: "/anthropic/v1/messages", Grammar: "anthropic-messages", Fields: "cache-cold user text and tool_result output", Status: "supported"},
