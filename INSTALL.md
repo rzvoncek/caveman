@@ -58,7 +58,7 @@ If you want to install for one agent (or want to know exactly what command runs 
 | **Augment Code** | `npx skills add JuliusBrussee/caveman -a augment` | No |
 | **Aider Desk** | `npx skills add JuliusBrussee/caveman -a aider-desk` | No |
 | **Sourcegraph Amp** | `npx skills add JuliusBrussee/caveman -a amp` | No |
-| **IBM Bob** | `npx skills add JuliusBrussee/caveman -a bob` | No |
+| **IBM Bob** | `caveman bob` | Yes (per-session: `caveman bob`) |
 | **Crush** | `npx skills add JuliusBrussee/caveman -a crush` | No |
 | **Devin (terminal)** | `npx skills add JuliusBrussee/caveman -a devin` | No |
 | **Droid (Factory)** | `npx skills add JuliusBrussee/caveman -a droid` | No |

@@ -76,6 +76,32 @@ export const PROFILES: AgentProfile[] = [
   },
   {
     "schema_version": "1",
+    "id": "bob",
+    "display_name": "IBM Bob",
+    "vendor": "IBM",
+    "homepage": "https://bob.ibm.com",
+    "binary_names": [
+      "bob"
+    ],
+    "args": [],
+    "install": "npm i -g @ibm/bob-shell",
+    "wire_protocol": "openai-chat",
+    "injection": {
+      "method": "env",
+      "env": {}
+    },
+    "skills": {
+      "format": "skill-md",
+      "user_dirs": [
+        "~/.bob/skills"
+      ]
+    },
+    "injection_completeness": "code-only",
+    "fallback": "generic-env",
+    "maintainer": null
+  },
+  {
+    "schema_version": "1",
     "id": "claude",
     "display_name": "Claude Code",
     "vendor": "Anthropic",

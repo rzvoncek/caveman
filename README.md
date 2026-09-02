@@ -67,7 +67,7 @@ Two products. Pick one or both.
 
 ```bash
 npm install -g @caveman-ai/cli && caveman setup --install
-caveman claude        # or codex · gemini · aider · opencode · hermes · openclaw
+caveman claude        # or codex · gemini · aider · opencode · hermes · openclaw · bob
 ```
 
 **2 · Save output** — the skill, the original. Your agent *answers* in tight caveman-speak while code, commands, and errors stay exact. MIT, 30+ agents.
@@ -240,6 +240,7 @@ One install also brings the small tools:
 | **Hermes Agent** | Nous Research | `--provider custom` + env |
 | **OpenClaw** | OpenClaw | ephemeral merged config, your config read-only |
 | **Pi** | pi.dev | bundled native extension, your `~/.pi` config untouched |
+| **IBM Bob** | IBM | env vars (`BOB_GATEWAY_URL`) |
 
 `caveman wrap` never edits host config files. Persistent shortcut writes are journaled and reversible with `caveman disable <agent>`. Real sessions round-trip in record mode, tested against **Hermes v0.18.0**, **OpenClaw 2026.6.11**, and **Pi 0.84.2**.
 

@@ -193,12 +193,12 @@ function collectInjectionModelIds(node, out) {
 //   - a named agent-specific wrap builder present in the source.
 // If index.ts is absent (a layout with no CLI) the manifest is unknown and the id-based
 // tier check is skipped; the inert-injection rule (below) still applies unconditionally.
-const BUILDER_FUNCTIONS = { buildCodexEphemeralWrapEnv: "codex", applyHermesAuthEnv: "hermes", applyClaudeBedrockWrap: "claude" };
+const BUILDER_FUNCTIONS = { buildCodexEphemeralWrapEnv: "codex", applyHermesAuthEnv: "hermes", applyClaudeBedrockWrap: "claude", applyBobWrapEnv: "bob" };
 // Builders that MUST resolve when index.ts is present: if the scrape misses one, a wrap
 // builder was renamed/removed and the manifest (plus the affected profile's tier) is stale.
 // A silent miss would let a now-builder-routed profile keep a `declarative` claim, so we
 // fail LOUD here rather than trust a degraded manifest.
-const EXPECTED_BUILDER_IDS = ["openclaw", "codex", "hermes", "claude"];
+const EXPECTED_BUILDER_IDS = ["openclaw", "codex", "hermes", "claude", "bob"];
 function loadBuilderManifest() {
   const indexFile = join(cliDir, "src", "index.ts");
   let text;

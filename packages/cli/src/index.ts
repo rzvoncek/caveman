@@ -5581,6 +5581,27 @@ function applyHermesAuthEnv(env: NodeJS.ProcessEnv, gw: string, modeGw = gw) {
   if (key && name) env[name] = key;
 }
 
+function applyBobWrapEnv(env: NodeJS.ProcessEnv, gw: string) {
+  // BOB_GATEWAY_URL is Bob's single base URL for ALL HTTP traffic — inference
+  // AND admin/auth endpoints (e.g. GET /admin/v1/profile on startup). Pointing
+  // it at the caveman proxy causes Bob to 404 on its pre-auth admin check,
+  // which triggers an SSO browser flow that crashes with "Session store is not
+  // initialized" when it times out.
+  //
+  // IBM Bob needs a separate inference-only env var (or the proxy needs a
+  // pass-through route for Bob's /admin/* paths forwarded to its real gateway)
+  // before inference routing can be enabled. Until then this is intentionally
+  // a no-op: `caveman bob` launches Bob directly with skills wired but no
+  // proxy routing.
+  //
+  // ponytail: ceiling = no token metering for Bob; upgrade when IBM exposes an
+  // inference-only base URL env var or the proxy gains a per-agent upstream
+  // forwarding table.
+  void gw;
+}
+
+
+
 async function startWrapProxy(mode: WrapRuntimeMode, mcpRecovery: boolean, toon: boolean, pixelModels: string | undefined, pixelDensity: string | undefined, gw = gatewayURL(), purpose: "standard" | "codex-subscription" = "standard", observeEstimate = false): Promise<boolean> {
   const bin = cavemanBin("caveman-proxy", "CAVEMAN_PROXY_BIN");
   const resolved = which(bin);
@@ -8686,6 +8707,8 @@ export function buildWrapEnv(agent?: AgentProfile, gw = gatewayURL(), mcpMode: M
     }
   }
   if (agent.id === "hermes") applyHermesAuthEnv(env, renderedGw, gw);
+  if (agent.id === "bob") applyBobWrapEnv(env, renderedGw);
+
   if (agent.id === "claude" && wrapMode(gw) === "local" && env[CLAUDE_ASSUME_FIRST_PARTY_ENV] === undefined && proxyAnthropicUpstreamIsFirstParty()) {
     // Keep Claude Code's first-party capability set (1M context window /
     // ~600k auto-compact window) intact behind the local pass-through proxy
